@@ -1,0 +1,16 @@
+{
+  "name": "dionysus-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "watch": "nodemon server.js"
+  },
+  "repository": "https://github.com/adcar/dionysus-api.git",
+  "author": "MD5HashBrowns <md5hashbrownz@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.2",
+    "nodemon": "^1.17.1",
+    "osmosis": "^1.1.6"
+  }
+}
