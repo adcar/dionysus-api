@@ -47,4 +47,29 @@ app.get('/movie/:title/:year', (req, res) => {
 		})
 })
 
+app.get('/show/:title/:season/:episode', (req, res) => {
+	let sources = []
+	osmosis
+		.get(
+			`http://www.mydarewatch.com/${req.params.title.replace(/\s+/g, '-')}/season/${req.params.season}/episode/${req.params.episode}`
+		)
+		.find('.watch_bottom + script[data-cfasync="false"]')
+		.set('test')
+		.data(function(data) {
+			eval(data.test)
+			embeds = embeds.sort().filter(x => x !== undefined)
+
+			// Soooo many regex's!
+			embeds = embeds.map(embed =>
+				new Buffer(embed, 'base64').toString('ascii')
+			)
+			sources = embeds.map(embed =>
+				embed.match(/http[^"]*/gi).toString()
+			)
+
+		})
+		.done(() => {
+			res.json(sources)
+		})
+})
 app.listen(3000, () => console.log('Dionysus API listening on port 3000 <3'))
