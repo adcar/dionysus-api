@@ -1,2 +1,5 @@
 # Dionysus API
-API for links / sources
+API for gathering links and sources of shows or movies
+
+
+Check out the [docs](https://dionysus.docs.apiary.io/)
