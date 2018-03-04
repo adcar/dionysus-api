@@ -2,11 +2,22 @@ const express = require('express')
 const axios = require('axios')
 const app = express()
 const osmosis = require('osmosis')
+const cheerio = require('cheerio')
+
+// CORS
+app.use(function(req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*')
+	res.header(
+		'Access-Control-Allow-Headers',
+		'Origin, X-Requested-With, Content-Type, Accept'
+	)
+	next()
+})
 
 app.get('/', (req, res) => {
 	res.send('Welcome to the Dionysus API!')
 })
-//
+
 app.get('/movie/:title/:year', (req, res) => {
 	let sources = []
 	osmosis
@@ -16,33 +27,23 @@ app.get('/movie/:title/:year', (req, res) => {
 				'-'
 			)}-${req.params.year}`
 		)
-		.find('.open_video_btn li:nth-of-type(2) a')
-		.follow('@href')
-		.find('iframe@src')
-		.set('source')
-		.log(console.log)
+		.find('.watch_bottom + script[data-cfasync="false"]')
+		.set('test')
 		.data(function(data) {
-			// Check for dead links
-			axios
-				.get(data.source)
-				.then(res => {
-					if (
-						res.data.includes('h3') /* Openload error */ ||
-						res.data.includes('h1') /* Streamango error */
-					) {
-						// Dead link
-					} else {
-						// Alive link
-						sources.push(data.source)
-					}
-				})
-				.catch(error => {
-					console.log(error)
-				})
+			eval(data.test)
+			embeds = embeds.sort().filter(x => x !== undefined)
+
+			// Soooo many regex's!
+			embeds = embeds.map(embed =>
+				new Buffer(embed, 'base64').toString('ascii')
+			)
+			sources = embeds.map(embed =>
+				embed.match(/http[^"]*/gi).toString()
+			)
+
 		})
 		.done(() => {
-			console.log()
-			res.json({ sources: sources })
+			res.json(sources)
 		})
 })
 
