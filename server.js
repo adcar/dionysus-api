@@ -60,12 +60,18 @@ app.get('/show/:title/:season/:episode', (req, res) => {
 			embeds = embeds.sort().filter(x => x !== undefined)
 
 			// Soooo many regex's!
+
+			// Converts base64 to ascii
 			embeds = embeds.map(embed =>
 				new Buffer(embed, 'base64').toString('ascii')
 			)
+
+			// Grabs anything beginning with http
 			sources = embeds.map(embed =>
 				embed.match(/http[^"]*/gi).toString()
 			)
+			// Cleans up array (removes line breaks)
+			sources = sources.filter(el => el.trim());
 
 		})
 		.done(() => {
