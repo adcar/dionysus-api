@@ -9,6 +9,7 @@
   "author": "MD5HashBrowns <md5hashbrownz@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.18.0",
     "express": "^4.16.2",
     "nodemon": "^1.17.1",
     "osmosis": "^1.1.6"
