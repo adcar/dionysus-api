@@ -13,6 +13,7 @@
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.2",
     "fast-html-parser": "^1.0.1",
+    "moviedb": "^0.2.10",
     "nodemon": "^1.17.1",
     "osmosis": "^1.1.6"
   }

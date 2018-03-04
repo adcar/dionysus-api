@@ -2,60 +2,10 @@ const express = require('express')
 const axios = require('axios')
 const app = express()
 const osmosis = require('osmosis')
+const mdb = require('moviedb')('2e0bfe56b018618b270a6e0428559292')
+// sort sources into JSON format based on provider name (doesn't check for dead links)
+const sortSources = require('./sortSources.js')
 
-// sort sources into JSON format (doesn't check for dead links)
-const sortSources = sources => {
-	let sortedSources = {
-		openload: [],
-		streamango: [],
-		vidto: [],
-		vshare: [],
-		estream: [],
-		vidlox: [],
-		vidup: [],
-		vidtodo: [],
-		vidzi: [],
-		thevideobee: [],
-		thevideo: [],
-		watchers: [],
-		streamplay: []
-	}
-	sources.forEach(source => {
-		if (source.includes('openload')) {
-			sortedSources.openload.push(source)
-		} else if (source.includes('streamango')) {
-			sortedSources.streamango.push(source)
-		} else if (source.includes('vidto.me')) {
-			sortedSources.vidto.push(source)
-		} else if (source.includes('vshare')) {
-			sortedSources.vshare.push(source)
-		} else if (source.includes('estream')) {
-			sortedSources.estream.push(source)
-		} else if (source.includes('vidlox')) {
-			sortedSources.vidlox.push(source)
-		} else if (source.includes('vidup')) {
-			sortedSources.vidup.push(source)
-		} else if (source.includes('vidtodo')) {
-			sortedSources.vidtodo.push(source)
-		} else if (source.includes('vidzi')) {
-			sortedSources.vidzi.push(source)
-		} else if (source.includes('thevideobee')) {
-			sortedSources.thevideobee.push(source)
-		} else if (
-			source.includes('thevideo.cc') ||
-			source.includes('thevideo.me')
-		) {
-			sortedSources.thevideo.push(source)
-		} else if (source.includes('watchers')) {
-			sortedSources.watchers.push(source)
-		} else if (source.includes('streamplay')) {
-			sortedSources.streamplay.push(source)
-		} else {
-			console.log(`${source} didn't match any known sources`)
-		}
-	})
-	return sortedSources
-}
 // CORS
 app.use(function(req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*')
@@ -67,9 +17,17 @@ app.use(function(req, res, next) {
 })
 
 app.get('/', (req, res) => {
-	res.send('Welcome to the Dionysus API!')
+	res.send(
+		'Welcome to the Dionysus API!<br /> <a href="https://dionysus.docs.apiary.io">Read the docs!</a>'
+	)
 })
-
+// This is a fallback in case the user doesn't include a year. It will automatically search for the title and grab the first result's year.
+app.get('/movie/:title', (req, res) => {
+	mdb.searchMovie({ query: req.params.title }, (err, response) => {
+		let year = response.results[0].release_date.slice(0, 4)
+		res.redirect(`/movie/${req.params.title}/${year}`)
+	})
+})
 app.get('/movie/:title/:year', (req, res) => {
 	let sources = []
 	osmosis
