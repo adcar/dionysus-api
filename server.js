@@ -72,4 +72,5 @@ app.get('/show/:title/:season/:episode', (req, res) => {
 			res.json(sources)
 		})
 })
-app.listen(3000, () => console.log('Dionysus API listening on port 3000 <3'))
+let port = process.env.PORT || 3000
+app.listen(port, () => console.log(`Dionysus API listening on port ${port} <3`))
