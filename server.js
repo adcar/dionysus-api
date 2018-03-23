@@ -32,10 +32,9 @@ app.get('/movie/:title/:year', (req, res) => {
 	let sources = []
 	osmosis
 		.get(
-			`http://www.mydarewatch.com/watchm/${req.params.title.replace(
-				/\s+/g,
-				'-'
-			)}-${req.params.year}`
+			`http://www.mydarewatch.com/watchm/${req.params.title
+				.replace(/\s+/g, '-')
+				.toLowerCase()}-${req.params.year}`
 		)
 		.find('.watch_bottom + script[data-cfasync="false"]')
 		.set('test')
@@ -52,16 +51,20 @@ app.get('/movie/:title/:year', (req, res) => {
 		.done(() => {
 			res.json(sortSources(sources))
 		})
+		.log(console.log)
+		.error(console.log)
+		.debug(console.log)
 })
 
 app.get('/show/:title/:season/:episode', (req, res) => {
 	let sources = []
 	osmosis
 		.get(
-			`http://www.mydarewatch.com/${req.params.title.replace(
-				/\s+/g,
-				'-'
-			)}/season/${req.params.season}/episode/${req.params.episode}`
+			`http://www.mydarewatch.com/${req.params.title
+				.replace(/\s+/g, '-')
+				.toLowerCase()}/season/${req.params.season}/episode/${
+				req.params.episode
+			}`
 		)
 		.find('.watch_bottom + script[data-cfasync="false"]')
 		.set('test')
